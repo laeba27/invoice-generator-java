@@ -1,0 +1,13 @@
+**/*.md
+**/*.xml
+**/*.json
+**/*.js
+**/*.ts
+**/*.tsx
+**/*.java
+**/*.properties
+!**/*.css
+!**/*.scss
+frontend/.next/**
+backend/target/**
+node_modules/**
