@@ -157,10 +157,30 @@ public class InvoiceService {
         return convertToResponse(invoice);
     }
 
-    InvoiceResponse updateInvoice(
-            Long id,
-            InvoiceRequest request
-    );
+    public InvoiceResponse updateInvoice(
+        Long id,
+        InvoiceRequest request
+) {
+
+    Business business = getBusinessForCurrentUser();
+
+    Invoice invoice = invoiceRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Invoice not found"));
+
+    if (!invoice.getBusinessId().equals(business.getId())) {
+        throw new RuntimeException("Unauthorized access to invoice");
+    }
+
+    invoice.setInvoiceTitle(request.getInvoiceTitle());
+    invoice.setInvoiceDate(request.getInvoiceDate());
+    invoice.setDueDate(request.getDueDate());
+    invoice.setNotes(request.getNotes());
+    invoice.setTemplateId(request.getTemplateId());
+
+    Invoice updatedInvoice = invoiceRepository.save(invoice);
+
+    return convertToResponse(updatedInvoice);
+}
 
     public List<InvoiceResponse> getAllInvoices() {
         Business business = getBusinessForCurrentUser();
